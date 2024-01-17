@@ -5,22 +5,16 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./movieApi.js"></script>
     <title>Document</title>
 </head>
 <body>
-
-<button onclick="fatchApi()">222</button>
+<button type="button"> </button>
 <script>
-    async function fatchApi() {
-        try {
-            const play = await movieApi.nowPlaying();
-            console.log(movieApi.nowPlaying())
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    movieApi.nowPlaying()
+        .then(response => console.log(response, '성공'))
+        .catch(error => console.log(error, '에러'))
 </script>
 </body>
 </html>
