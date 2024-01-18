@@ -10,11 +10,31 @@
     <title>Document</title>
 </head>
 <body>
-<button type="button"> </button>
 <script>
-    movieApi.detail()
+    function movieDetailCall(type, id){
+        movieApi.detail(id)
         .then(response => console.log(response, '성공'))
         .catch(error => console.log(error, '에러'))
+    }
+    movieDetailCall('906126');    
 </script>
+
+<div class="movie__detail">
+    <div class="movie__detail__head">
+        <div class="head__poster">
+            <img src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2/za0Fmc6ndq0XFoFMh2e5ElMAmgi.jpg" alt="">
+        </div>
+        <div class="head__inform">
+            <h3>안데스 설원의 생존자들 <span>(2023)</span></h3>
+            <ul>
+                <li class="adult"></li>
+                <li class="releaseDate"></li>
+                <li class="genres"></li>
+                <li class="runtime"></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
