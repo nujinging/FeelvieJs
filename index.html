@@ -8,13 +8,39 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="./movieApi.js"></script>
     <title>Document</title>
+    <style>
+        .row {display:flex;flex-wrap:nowrap;overflow-x:auto}
+        .row .item {flex-shrink:0;width:300px}
+    </style>
 </head>
 <body>
-<button type="button"> </button>
-<script>
-    movieApi.nowPlaying()
-        .then(response => console.log(response, '성공'))
-        .catch(error => console.log(error, '에러'))
-</script>
+
+<div class="container">
+    <div class="row">
+
+    </div>
+</div>
 </body>
+
+<script>
+    async function FetchData() {
+        try {
+            const data = await movieApi.nowPlaying();
+            data.data.results.forEach(item => {
+                const itemBox = document.createElement('div');
+                itemBox.classList.add('item');
+                itemBox.innerHTML = `
+                           <div class="title">${item.title}</div>
+                        `
+                const imgBox = document.createElement('img');
+                imgBox.src = `https://media.themoviedb.org/t/p/w220_and_h330_face${item.backdrop_path}`;
+                document.querySelector('.row').append(imgBox, itemBox)
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    FetchData();
+
+</script>
 </html>
