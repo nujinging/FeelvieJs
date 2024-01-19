@@ -1,0 +1,15 @@
+.movie__detail {}
+.movie__detail .movie__detail__head {
+  display: flex;
+  justify-content: center;
+  background-image: linear-gradient(to right, rgba(178.5, 178.5, 178.5, 1) calc((50vw - 170px) - 340px), rgba(178.5, 178.5, 178.5, 0.84) 50%, rgba(178.5, 178.5, 178.5, 0.84) 100%);
+}
+.movie__detail .inner__wrap {
+  width: 1440px;
+}
+.movie__detail .head__poster {}
+.movie__detail .head__poster > img {}
+.movie__detail .head__inform {}
+.movie__detail .head__inform h3 {}
+.movie__detail .head__inform ul {}
+.movie__detail .head__inform ul li {}

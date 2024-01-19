@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../style/detail.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../services/movieApi.js"></script>
+    <title>Document</title>
+</head>
+<body>
+
+<div id="container"></div>
+
+<script>
+    const render = async () => {
+        const fetchData = await movieApi.detail('movie','906126');
+        const data = fetchData.data;
+        console.log(data);
+
+        const transAdult = (age) => {
+            return age == false ? '애들은자라' : '므흣';
+        }
+        
+        const transRuntime = (runtime) => {
+            const hour = Math.floor(runtime / 60);
+            const minute =  Math.floor(((runtime / 60) * 100) / 10);
+            
+            return `${hour}시간 ${minute}분`;
+        }
+        
+        const detailTemplate = `
+            <div class="movie__detail">
+                <div class="movie__detail__head">
+                    <div class="inner__wrap">
+                        <div class="head__poster">
+                            <img src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2${data.poster_path}" alt="">
+                        </div>
+                        <div class="head__inform">
+                            <h3>${data.title} <span>(2023)</span></h3>
+                            <ul>
+                                <li class="adult">${transAdult(data.adult)}</li>
+                                <li class="releaseDate">${data.release_date}</li>
+                                <li class="genres">${data.genres[0].name} ${data.genres[1].name}</li>
+                                <li class="runtime">${transRuntime(data.runtime)}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.querySelector('#container').innerHTML = detailTemplate;
+    }
+    render();
+
+    
+</script>
+
+</body>
+</html>
