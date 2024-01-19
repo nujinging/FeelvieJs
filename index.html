@@ -6,35 +6,38 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="./css/list.css"/>
     <script src="./movieApi.js"></script>
     <title>Document</title>
-    <style>
-        .row {display:flex;flex-wrap:nowrap;overflow-x:auto}
-        .row .item {flex-shrink:0;width:300px}
-    </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="row">
+    <div class="item_slide">
 
     </div>
 </div>
 </body>
 
 <script>
+
     async function FetchData() {
         try {
             const data = await movieApi.nowPlaying();
             data.data.results.forEach(item => {
                 const itemBox = document.createElement('div');
-                itemBox.classList.add('item');
-                itemBox.innerHTML = `
-                           <div class="title">${item.title}</div>
-                        `
-                const imgBox = document.createElement('img');
-                imgBox.src = `https://media.themoviedb.org/t/p/w220_and_h330_face${item.backdrop_path}`;
-                document.querySelector('.row').append(imgBox, itemBox)
+                itemBox.classList.add('list_card');
+                document.querySelector('.item_slide').append(itemBox);
+
+                let itemInfo = `
+                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.backdrop_path}"/>
+                    <h3>${item.title}</h3>
+                `
+                itemBox.innerHTML = itemInfo
             })
         } catch (error) {
             console.log(error);
@@ -42,5 +45,17 @@
     }
     FetchData();
 
+
+    const swiper = new Swiper('.row', {
+        direction: 'vertical',
+        loop: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        scrollbar: {
+            el: '.swiper-scrollbar',
+        },
+    });
 </script>
 </html>
