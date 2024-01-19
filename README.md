@@ -4,7 +4,7 @@
 vanilla javascript 자체의 심도있는 개념과 내용을 공부하기 위해 진행되는 토이 프로젝트
 
 
-## Front-End *👩 김유진 & 고국천*
+## Front-End * 김유진 & 고국천*
 
 ### ⚙️ Stack
 - Javascript
