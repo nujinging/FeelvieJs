@@ -17,6 +17,14 @@
 <body>
 
 <div class="container">
+    <ul class="type_list">
+        <li>
+            <button type="button" onclick="TypeChange('movie')" class="active">영화</button>
+        </li>
+        <li>
+            <button type="button" onclick="TypeChange('tv')" class="">TV</button>
+        </li>
+    </ul>
     <div class="item_slide">
 
     </div>
@@ -24,6 +32,11 @@
 </body>
 
 <script>
+
+    function TypeChange(type) {
+        const contentType = type;
+    }
+
 
     async function FetchData() {
         try {
