@@ -16,22 +16,34 @@
 </head>
 <body>
 
-<div class="container">
-    <ul class="type_list">
-        <li>
-            <button type="button" onclick="TypeChange('movie')" class="active">영화</button>
-        </li>
-        <li>
-            <button type="button" onclick="TypeChange('tv')" class="">TV</button>
-        </li>
-    </ul>
+<div class="item_container">
+<!--    <ul class="type_list">-->
+<!--        <li>-->
+<!--            <button type="button" onclick="TypeChange('movie')" class="active">영화</button>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <button type="button" onclick="TypeChange('tv')" class="">TV</button>-->
+<!--        </li>-->
+<!--    </ul>-->
 
-
-    <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>
-    <div class="swiper item_slide">
-        <div class="swiper-wrapper">
+    <div class="item_box">
+        <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>
+        <div class="swiper item_slide now_playing">
+            <div class="swiper-wrapper">
+            </div>
         </div>
     </div>
+
+    <div class="item_box">
+        <div class="title"><h2>🎬👍가장 인기있는 컨텐츠</h2></div>
+        <div class="swiper item_slide popular">
+            <div class="swiper-wrapper">
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 </body>
 
@@ -47,20 +59,41 @@
 
     async function FetchData() {
         try {
-            const data = await movieApi.nowPlaying();
-            const dataList = data.data.results;
-            dataList.forEach(item => {
+            const nowPlayingData = await movieApi.nowPlaying();
+            const nowPlayingList = nowPlayingData.data.results;
+
+
+            nowPlayingList.forEach(item => {
                 const itemBox = document.createElement('div');
                 itemBox.classList.add('list_card');
                 itemBox.classList.add('swiper-slide');
-                document.querySelector('.item_slide .swiper-wrapper').append(itemBox);
+                document.querySelector('.now_playing .swiper-wrapper').append(itemBox);
 
                 let itemInfo = `
                     <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.backdrop_path}"/>
                     <h3>${item.title}</h3>
                 `
                 itemBox.innerHTML = itemInfo
-            })
+            });
+
+
+            const popularData = await movieApi.popular();
+            const popularList = popularData.data.results;
+
+            popularList.forEach(item => {
+                const itemBox = document.createElement('div');
+                itemBox.classList.add('list_card');
+                itemBox.classList.add('swiper-slide');
+                document.querySelector('.popular .swiper-wrapper').append(itemBox);
+
+                let itemInfo = `
+                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.backdrop_path}"/>
+                    <h3>${item.title}</h3>
+                `
+                itemBox.innerHTML = itemInfo
+            });
+
+
         } catch (error) {
             console.log(error);
         }

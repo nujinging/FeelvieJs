@@ -107,8 +107,17 @@ body {
     }
 }
 
+.item_container {padding: 8.75rem 0;overflow: hidden;}
+.item_container .item_box+.item_box {margin-top: 5rem;}
 
-.item_slide {display: flex;flex-wrap:nowrap;overflow: auto;padding: 0 3.75rem;}
+
+/* 제목 */
+.title {display: flex;align-items: center;margin-bottom: 1.875rem;padding: 0 3.75rem}
+.title h2 {color: #fff;font-size: 1.875rem;font-weight: bold;line-height: 2.5rem}
+
+
+
+.item_slide {padding: 0 3.75rem;}
 .item_slide .swiper-wrapper {transform: translateZ(0);}
 .item_slide .list_card {flex-shrink:0;width: 13.75rem;animation: showItem 0.5s ease-in;}
 .item_slide .list_card + .list_card {margin-left: 1.875rem;}
