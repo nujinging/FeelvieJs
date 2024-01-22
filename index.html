@@ -25,8 +25,12 @@
             <button type="button" onclick="TypeChange('tv')" class="">TV</button>
         </li>
     </ul>
-    <div class="item_slide">
 
+
+    <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>
+    <div class="swiper item_slide">
+        <div class="swiper-wrapper">
+        </div>
     </div>
 </div>
 </body>
@@ -37,14 +41,19 @@
         const contentType = type;
     }
 
+    const swiper = new Swiper(".item_slide", {
+        slidesPerView: "auto"
+    });
 
     async function FetchData() {
         try {
             const data = await movieApi.nowPlaying();
-            data.data.results.forEach(item => {
+            const dataList = data.data.results;
+            dataList.forEach(item => {
                 const itemBox = document.createElement('div');
                 itemBox.classList.add('list_card');
-                document.querySelector('.item_slide').append(itemBox);
+                itemBox.classList.add('swiper-slide');
+                document.querySelector('.item_slide .swiper-wrapper').append(itemBox);
 
                 let itemInfo = `
                     <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.backdrop_path}"/>
@@ -59,16 +68,5 @@
     FetchData();
 
 
-    const swiper = new Swiper('.row', {
-        direction: 'vertical',
-        loop: true,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        scrollbar: {
-            el: '.swiper-scrollbar',
-        },
-    });
 </script>
 </html>
