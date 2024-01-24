@@ -10,8 +10,10 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="./css/reset.css"/>
+    <link rel="stylesheet" href="./css/common.css"/>
     <link rel="stylesheet" href="./css/list.css"/>
-    <script src="./movieApi.js"></script>
+    <script src="./services/movieApi.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -42,6 +44,22 @@
         </div>
     </div>
 
+    <div class="item_box">
+        <div class="title"><h2><span>📅 오늘 가장 많이</span>찾아 본 컨텐츠</h2></div>
+        <div class="swiper item_slide today">
+            <div class="swiper-wrapper">
+            </div>
+        </div>
+    </div>
+
+    <div class="item_box">
+        <div class="title"><h2><span>📅 오늘 가장 많이</span>찾아 본 컨텐츠</h2></div>
+        <div class="swiper item_slide week">
+            <div class="swiper-wrapper">
+            </div>
+        </div>
+    </div>
+
 
 
 </div>
@@ -59,7 +77,10 @@
 
     async function FetchData() {
         try {
-            const nowPlayingData = await movieApi.nowPlaying();
+
+            const type = 'movie';
+
+            const nowPlayingData = await movieApi.nowPlaying('movie');
             const nowPlayingList = nowPlayingData.data.results;
 
 
@@ -70,14 +91,16 @@
                 document.querySelector('.now_playing .swiper-wrapper').append(itemBox);
 
                 let itemInfo = `
-                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.backdrop_path}"/>
-                    <h3>${item.title}</h3>
+                    <a href="./${type}/${item.id}/detail.html">
+                        <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>
+                        <h3>${item.title}</h3>
+                    </a>
                 `
                 itemBox.innerHTML = itemInfo
             });
 
 
-            const popularData = await movieApi.popular();
+            const popularData = await movieApi.popular('movie');
             const popularList = popularData.data.results;
 
             popularList.forEach(item => {
@@ -87,12 +110,46 @@
                 document.querySelector('.popular .swiper-wrapper').append(itemBox);
 
                 let itemInfo = `
-                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.backdrop_path}"/>
+                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>
                     <h3>${item.title}</h3>
                 `
                 itemBox.innerHTML = itemInfo
             });
 
+            const todayData = await movieApi.today('movie', 'day');
+            const todayList = todayData.data.results;
+
+            console.log(todayList)
+
+            todayList.forEach(item => {
+                const itemBox = document.createElement('div');
+                itemBox.classList.add('list_card');
+                itemBox.classList.add('swiper-slide');
+                document.querySelector('.today .swiper-wrapper').append(itemBox);
+
+                let itemInfo = `
+                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>
+                    <h3>${item.title}</h3>
+                `
+                itemBox.innerHTML = itemInfo
+            });
+
+
+            const weekData = await movieApi.today('movie', 'week');
+            const weekList = weekData.data.results;
+
+            weekList.forEach(item => {
+                const itemBox = document.createElement('div');
+                itemBox.classList.add('list_card');
+                itemBox.classList.add('swiper-slide');
+                document.querySelector('.week .swiper-wrapper').append(itemBox);
+
+                let itemInfo = `
+                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>
+                    <h3>${item.title}</h3>
+                `
+                itemBox.innerHTML = itemInfo
+            });
 
         } catch (error) {
             console.log(error);
