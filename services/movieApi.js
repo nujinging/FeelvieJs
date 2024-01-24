@@ -7,8 +7,9 @@ const request = axios.create({
 });
 
 const movieApi = {
-  nowPlaying: () => request.get(`movie/now_playing`),
-  popular: () => request.get(`movie/popular`),
+  nowPlaying: (type) => request.get(`${type}/now_playing`),
+  popular: (type) => request.get(`${type}/popular`),
+  today: (type, time_window) => request.get(`trending/${type}/${time_window}`),
   detail: (type, id) => request.get(`${type}/${id}`),
   social: (type, id) => request.get(`${type}/${id}/external_ids`),
 };
