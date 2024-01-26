@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="./css/reset.css"/>
     <link rel="stylesheet" href="./css/common.css"/>
@@ -19,14 +19,14 @@
 <body>
 
 <div class="item_container">
-<!--    <ul class="type_list">-->
-<!--        <li>-->
-<!--            <button type="button" onclick="TypeChange('movie')" class="active">영화</button>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            <button type="button" onclick="TypeChange('tv')" class="">TV</button>-->
-<!--        </li>-->
-<!--    </ul>-->
+    <!--    <ul class="type_list">-->
+    <!--        <li>-->
+    <!--            <button type="button" onclick="TypeChange('movie')" class="active">영화</button>-->
+    <!--        </li>-->
+    <!--        <li>-->
+    <!--            <button type="button" onclick="TypeChange('tv')" class="">TV</button>-->
+    <!--        </li>-->
+    <!--    </ul>-->
 
     <div class="item_box">
         <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>
@@ -61,7 +61,6 @@
     </div>
 
 
-
 </div>
 </body>
 
@@ -77,84 +76,32 @@
 
     async function FetchData() {
         try {
+            async function fetchData(apiName, container) {
+                const movieData = await movieApi[apiName]('movie');
+                const movieList = movieData.data.results;
 
-            const type = 'movie';
+                movieList.forEach(item => {
+                    const itemBox = document.createElement('div');
+                    itemBox.classList.add('list_card');
+                    itemBox.classList.add('swiper-slide');
+                    document.querySelector(container + ' .swiper-wrapper').append(itemBox);
 
-            const nowPlayingData = await movieApi.nowPlaying('movie');
-            const nowPlayingList = nowPlayingData.data.results;
-
-
-            nowPlayingList.forEach(item => {
-                const itemBox = document.createElement('div');
-                itemBox.classList.add('list_card');
-                itemBox.classList.add('swiper-slide');
-                document.querySelector('.now_playing .swiper-wrapper').append(itemBox);
-
-                let itemInfo = `
-                    <a href="./${type}/${item.id}/detail.html">
+                    const itemInfo = `
                         <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>
                         <h3>${item.title}</h3>
-                    </a>
-                `
-                itemBox.innerHTML = itemInfo
-            });
-
-
-            const popularData = await movieApi.popular('movie');
-            const popularList = popularData.data.results;
-
-            popularList.forEach(item => {
-                const itemBox = document.createElement('div');
-                itemBox.classList.add('list_card');
-                itemBox.classList.add('swiper-slide');
-                document.querySelector('.popular .swiper-wrapper').append(itemBox);
-
-                let itemInfo = `
-                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>
-                    <h3>${item.title}</h3>
-                `
-                itemBox.innerHTML = itemInfo
-            });
-
-            const todayData = await movieApi.today('movie', 'day');
-            const todayList = todayData.data.results;
-
-            console.log(todayList)
-
-            todayList.forEach(item => {
-                const itemBox = document.createElement('div');
-                itemBox.classList.add('list_card');
-                itemBox.classList.add('swiper-slide');
-                document.querySelector('.today .swiper-wrapper').append(itemBox);
-
-                let itemInfo = `
-                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>
-                    <h3>${item.title}</h3>
-                `
-                itemBox.innerHTML = itemInfo
-            });
-
-
-            const weekData = await movieApi.today('movie', 'week');
-            const weekList = weekData.data.results;
-
-            weekList.forEach(item => {
-                const itemBox = document.createElement('div');
-                itemBox.classList.add('list_card');
-                itemBox.classList.add('swiper-slide');
-                document.querySelector('.week .swiper-wrapper').append(itemBox);
-
-                let itemInfo = `
-                    <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>
-                    <h3>${item.title}</h3>
-                `
-                itemBox.innerHTML = itemInfo
-            });
-
+                        `;
+                    itemBox.innerHTML = itemInfo;
+                });
+            }
+            await fetchData('nowPlaying', '.now_playing');
+            await fetchData('popular', '.popular');
+            await fetchData('today', '.today');
+            await fetchData('today', '.week');
         } catch (error) {
             console.log(error);
         }
     }
+
     FetchData();
 
 
