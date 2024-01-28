@@ -19,14 +19,14 @@
 <body>
 
 <div class="item_container">
-    <!--    <ul class="type_list">-->
-    <!--        <li>-->
-    <!--            <button type="button" onclick="TypeChange('movie')" class="active">영화</button>-->
-    <!--        </li>-->
-    <!--        <li>-->
-    <!--            <button type="button" onclick="TypeChange('tv')" class="">TV</button>-->
-    <!--        </li>-->
-    <!--    </ul>-->
+        <ul class="type_list">
+            <li>
+                <button type="button" onclick="TypeChange('movie')" class="active">영화</button>
+            </li>
+            <li>
+                <button type="button" onclick="TypeChange('tv')" class="">TV</button>
+            </li>
+        </ul>
 
     <div class="item_box">
         <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>
@@ -65,9 +65,11 @@
 </body>
 
 <script>
-
+    let contentType = '';
     function TypeChange(type) {
-        const contentType = type;
+        contentType = type;
+         FetchData();
+         console.log(contentType)
     }
 
     const swiper = new Swiper(".item_slide", {
@@ -77,7 +79,7 @@
     async function FetchData() {
         try {
           async function fetchData(apiName, container, additionalContainer = null) {
-            const movieData = await movieApi[apiName]('movie', additionalContainer);
+            const movieData = await movieApi[apiName](contentType, additionalContainer);
             const movieList = movieData.data.results;
 
             movieList.forEach(item => {
@@ -103,7 +105,7 @@
     }
 
     FetchData();
-
+    localStorage.setItem('type', type);
 
 </script>
 </html>
