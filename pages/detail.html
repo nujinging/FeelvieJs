@@ -7,92 +7,161 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="../css/reset.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="../css/reset.css"/>
+    <link rel="stylesheet" href="../css/common.css"/>
+    <link rel="stylesheet" href="../css/list.css"/>
     <link rel="stylesheet" href="../css/detail.css" />
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="../services/movieApi.js"></script>
     <title>Document</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+
+        <div class="item_container detail">
+            <div class="item_box">
+                <div class="title"><h2>등장인물</h2></div>
+                <div class="swiper item_slide">
+                    <div class="swiper-wrapper"></div>
+                </div>
+            </div>
+            <!-- // credits -->
+
+            <div class="item_box">
+                <div class="title">
+                    <h2>미디어</h2>
+                    <ul class="type_list">
+                        <li><button type="button" class="active">동영상 3</button></li>
+                        <li><button type="button" class="">배경 32</button></li>
+                        <li><button type="button" class="">포스터 24</button></li>
+                    </ul>
+                </div>
+                <div class="swiper swiper-initialized swiper-horizontal media_slide swiper-backface-hidden">
+                    <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px);">
+                        <div class="swiper-slide video_card swiper-slide-active"><img src="https://i.ytimg.com/vi/Bldf9SWRPFM/hqdefault.jpg" alt=""></div>
+                        <div class="swiper-slide video_card swiper-slide-next"><img src="https://i.ytimg.com/vi/OyD-JZSYjXc/hqdefault.jpg" alt=""></div>
+                        <div class="swiper-slide video_card"><img src="https://i.ytimg.com/vi/Ac7j_wLYJ9Y/hqdefault.jpg" alt=""></div>
+                    </div>
+                </div>
+            </div>
+            <!-- // media -->
+        </div>
+    </div>
 
     <script>
-    const render = async (type, id) => {
-        const fetchBasic = await movieApi.detail(type, id);
-        const fetchSocial = await movieApi.social(type, id);
-        const data = fetchBasic.data;
-        const socialData = fetchSocial.data;
 
-        console.log(data);
-        console.log(socialData);
+        const swiper = new Swiper(".item_slide", {
+            slidesPerView: "auto"
+        });
 
-        const transAdult = age => {
-            return age == false ? "애들은자라" : "므흣";
+        const render = async (type, id) => {
+            const fetchBasic = await movieApi.detail(type, id);
+            const fetchSocial = await movieApi.social(type, id);
+            const fetchCredits = await movieApi.credits(type, id);
+            const data = fetchBasic.data;
+            const socialData = fetchSocial.data;
+            const creditsData = fetchCredits.data.cast;
+
+            console.log(data);
+            console.log(socialData);
+            console.log(creditsData);
+
+            const transAdult = age => {
+                return age == false ? "애들은자라" : "므흣";
+            };
+
+            const transRuntime = runtime => {
+                const hour = Math.floor(runtime / 60);
+                const minute = Math.floor(((runtime / 60) * 100) / 10);
+
+                return `${hour}시간 ${minute}분`;
+            };
+
+            const handleSocial = () => {
+                const socialMedia = [
+                    {name: '페이스북', url: 'http://www.facebook.com', class: "facebook", link: `${socialData?.facebook_id}`},
+                    {name: '트위터', url: 'http://www.twitter.com', class: "twitter", link: `${socialData?.twitter_id}`},
+                    {name: '인스타그램', url: 'http://www.instagram.com', class: "instagram", link: `${socialData?.instagram_id}`}
+                ];
+                
+                const socialTemplate = socialMedia.map((social) => 
+                !!social.link ? (
+                    `<li>
+                        <a 
+                            href="${social.url}/${social.link}"
+                            class="${social.class}"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <span class="blind">${social.name}</span>
+                        </a>
+                    </li>`
+                ) : null).join("");
+                return socialTemplate;
+            }
+
+            const detailTemplate = `
+                <section
+                    class="detail_container"
+                    style="background-image: url('https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${data.backdrop_path}');"
+                >
+                    <div class="detail_info">
+                        <h1 class="tit">${data.title}</h1>
+                        <div class="meta">
+                            <span class="type">Moive</span><span class="date">${data.release_date}</span>
+                        </div>
+                        <div class="meta">
+                            <span class="txt">${transAdult(data.adult)}</span>
+                            <span class="txt">${data.genres[0].name}</span>
+                            <span class="txt">범죄</span><span class="txt">${data.genres[1].name}</span>
+                        </div>
+                        <div class="comment">
+                            <p class="intro">${data.overview}</p>
+                        </div>
+                    </div>
+                    <div class="detail_poster">
+                        <ul class="social_links">${handleSocial()}</ul>
+                        <picture
+                        ><img
+                            src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2${data.poster_path}"
+                            alt="Movie Poster"
+                            loading="lazy"
+                        /></picture>
+                    </div>
+                </section>
+            `;
+            document.querySelector("#root").insertAdjacentHTML("afterbegin", detailTemplate);
+
+            const insertCredits = () => {
+                const moreCredits = `
+                    <a class="credits_more" href="/detail/movie/${id}/credits">더보기</a>
+                `;
+                document.querySelector(".item_container .title").insertAdjacentHTML("beforeend", moreCredits);
+
+                creditsData.forEach((cast, index) => {
+                    const itemBox = document.createElement('div');
+                    itemBox.classList.add('swiper-slide');
+                    itemBox.classList.add('list_card');
+                    itemBox.classList.add('person_card');
+                    document.querySelector('.swiper-wrapper').append(itemBox);
+
+                    const itemInfo = `
+                        <a href="/person/${cast.id} ">
+                            <img src="https://image.tmdb.org/t/p/w154/${cast.profile_path}" alt="${cast.name}" loading="lazy">
+                            <h3>${cast.name}</h3>
+                        </a>
+                    `;
+                    itemBox.innerHTML = itemInfo;
+                });
+            }
+            insertCredits();
         };
-
-        const transRuntime = runtime => {
-            const hour = Math.floor(runtime / 60);
-            const minute = Math.floor(((runtime / 60) * 100) / 10);
-
-            return `${hour}시간 ${minute}분`;
-        };
-
-        const handleSocial = () => {
-            const socialMedia = [
-                {name: '페이스북', url: 'http://www.facebook.com', class: "facebook", link: `${socialData?.facebook_id}`},
-                {name: '트위터', url: 'http://www.twitter.com', class: "twitter", link: `${socialData?.twitter_id}`},
-                {name: '인스타그램', url: 'http://www.instagram.com', class: "instagram", link: `${socialData?.instagram_id}`}
-            ];
-            
-            const socialTemplate = socialMedia.map((social) => 
-            !!social.link ? (
-                `<li>
-                    <a 
-                        href="${social.url}/${social.link}"
-                        class="${social.class}"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        <span class="blind">${social.name}</span>
-                    </a>
-                </li>`
-            ) : null).join("");
-            return socialTemplate;
-        }
-
-        const detailTemplate = `
-        <section
-            class="detail_container"
-            style="background-image: url('https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${data.backdrop_path}');"
-        >
-            <div class="detail_info">
-                <h1 class="tit">${data.title}</h1>
-                <div class="meta">
-                    <span class="type">Moive</span><span class="date">${data.release_date}</span>
-                </div>
-                <div class="meta">
-                    <span class="txt">${transAdult(data.adult)}</span>
-                    <span class="txt">${data.genres[0].name}</span>
-                    <span class="txt">범죄</span><span class="txt">${data.genres[1].name}</span>
-                </div>
-                <div class="comment">
-                    <p class="intro">${data.overview}</p>
-                </div>
-            </div>
-            <div class="detail_poster">
-                <ul class="social_links">${handleSocial()}</ul>
-                <picture
-                ><img
-                    src="https://media.themoviedb.org/t/p/w300_and_h450_bestv2${data.poster_path}"
-                    alt="Movie Poster"
-                    loading="lazy"
-                /></picture>
-            </div>
-        </section>
-        `;
-        document.querySelector("#root").innerHTML = detailTemplate;
-      };
-      render("movie","609681");
+        render("movie","609681");
     </script>
   </body>
 </html>
