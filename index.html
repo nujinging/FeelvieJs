@@ -40,6 +40,8 @@
         <div class="title"><h2>🎬👍가장 인기있는 컨텐츠</h2></div>
         <div class="swiper item_slide popular">
             <div class="swiper-wrapper">
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
         </div>
     </div>
@@ -89,6 +91,13 @@
 
             document.querySelector(container + ' .swiper-wrapper').innerHTML = '' ;
 
+
+            const navi = document.createElement('div');
+            navi.classList.add('swiper-button-next')
+
+              document.querySelector(container).append(navi);
+
+
             movieList.forEach(item => {
               const itemBox = document.createElement('div');
               itemBox.classList.add('list_card');
@@ -100,6 +109,7 @@
                         <h3>${item.title}</h3>
                         `;
               itemBox.innerHTML = itemInfo;
+
             });
           }
           // await fetchData('nowPlaying', '.now_playing');
