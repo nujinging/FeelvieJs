@@ -43,6 +43,8 @@
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
             </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
     </div>
 
@@ -80,7 +82,11 @@
         localStorage.setItem('type', contentType);
     }
     const swiper = new Swiper(".item_slide", {
-        slidesPerView: "auto"
+        slidesPerView: "auto",
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
     });
 
     async function FetchData() {
@@ -90,13 +96,6 @@
             const movieList = movieData.data.results;
 
             document.querySelector(container + ' .swiper-wrapper').innerHTML = '' ;
-
-
-            const navi = document.createElement('div');
-            navi.classList.add('swiper-button-next')
-
-              document.querySelector(container).append(navi);
-
 
             movieList.forEach(item => {
               const itemBox = document.createElement('div');
