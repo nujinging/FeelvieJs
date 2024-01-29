@@ -28,13 +28,13 @@
             </li>
         </ul>
 
-    <div class="item_box">
-        <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>
-        <div class="swiper item_slide now_playing">
-            <div class="swiper-wrapper">
-            </div>
-        </div>
-    </div>
+<!--    <div class="item_box">-->
+<!--        <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>-->
+<!--        <div class="swiper item_slide now_playing">-->
+<!--            <div class="swiper-wrapper">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <div class="item_box">
         <div class="title"><h2>🎬👍가장 인기있는 컨텐츠</h2></div>
@@ -65,13 +65,24 @@
 </body>
 
 <script>
-    let contentType = '';
+
+
+    let contentType = 'movie';
     function TypeChange(type) {
         contentType = type;
-         FetchData();
-         console.log(contentType)
-    }
+         document.querySelectorAll('.type_list button').forEach(item => {
+             item.classList.remove('active')
+         })
+         event.target.classList.add('active');
 
+
+        if (type === 'movie') {
+            FetchData();
+        } else {
+            FetchData();
+        }
+
+    }
     const swiper = new Swiper(".item_slide", {
         slidesPerView: "auto"
     });
@@ -81,6 +92,8 @@
           async function fetchData(apiName, container, additionalContainer = null) {
             const movieData = await movieApi[apiName](contentType, additionalContainer);
             const movieList = movieData.data.results;
+
+            document.querySelector(container + ' .swiper-wrapper').innerHTML = '' ;
 
             movieList.forEach(item => {
               const itemBox = document.createElement('div');
@@ -95,7 +108,7 @@
               itemBox.innerHTML = itemInfo;
             });
           }
-          await fetchData('nowPlaying', '.now_playing');
+          // await fetchData('nowPlaying', '.now_playing');
           await fetchData('popular', '.popular');
           await fetchData('today', '.today','day');
           await fetchData('today', '.week', 'week');
