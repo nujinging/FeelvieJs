@@ -74,14 +74,8 @@
              item.classList.remove('active')
          })
          event.target.classList.add('active');
-
-
-        if (type === 'movie') {
-            FetchData();
-        } else {
-            FetchData();
-        }
-
+        FetchData();
+        localStorage.setItem('type', contentType);
     }
     const swiper = new Swiper(".item_slide", {
         slidesPerView: "auto"
@@ -118,7 +112,7 @@
     }
 
     FetchData();
-    localStorage.setItem('type', type);
+
 
 </script>
 </html>

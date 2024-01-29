@@ -16,7 +16,8 @@
         .then(response => console.log(response, '성공'))
         .catch(error => console.log(error, '에러'))
     }
-    movieDetailCall('906126');    
+    movieDetailCall('906126');
+
 </script>
 
 <div class="movie__detail">
@@ -36,5 +37,9 @@
     </div>
 </div>
 
+
+<script>
+    console.log(localStorage.getItem('type'))
+</script>
 </body>
 </html>
