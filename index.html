@@ -19,22 +19,22 @@
 <body>
 
 <div class="item_container">
-        <ul class="type_list">
-            <li>
-                <button type="button" onclick="TypeChange('movie')" class="active">영화</button>
-            </li>
-            <li>
-                <button type="button" onclick="TypeChange('tv')" class="">TV</button>
-            </li>
-        </ul>
+    <ul class="type_list">
+        <li>
+            <button type="button" onclick="TypeChange('movie')" class="active">영화</button>
+        </li>
+        <li>
+            <button type="button" onclick="TypeChange('tv')" class="">TV</button>
+        </li>
+    </ul>
 
-<!--    <div class="item_box">-->
-<!--        <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>-->
-<!--        <div class="swiper item_slide now_playing">-->
-<!--            <div class="swiper-wrapper">-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <!--    <div class="item_box">-->
+    <!--        <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>-->
+    <!--        <div class="swiper item_slide now_playing">-->
+    <!--            <div class="swiper-wrapper">-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
 
     <div class="item_box">
         <div class="title"><h2>🎬👍가장 인기있는 컨텐츠</h2></div>
@@ -69,18 +69,19 @@
 </body>
 
 <script>
-
-
     let contentType = 'movie';
+    let contentId = '';
+
     function TypeChange(type) {
         contentType = type;
-         document.querySelectorAll('.type_list button').forEach(item => {
-             item.classList.remove('active')
-         })
-         event.target.classList.add('active');
+        document.querySelectorAll('.type_list button').forEach(item => {
+            item.classList.remove('activ
+        })
+        event.target.classList.add('active');
         FetchData();
         localStorage.setItem('type', contentType);
     }
+
     const swiper = new Swiper(".item_slide", {
         slidesPerView: "auto",
         navigation: {
@@ -91,30 +92,42 @@
 
     async function FetchData() {
         try {
-          async function fetchData(apiName, container, additionalContainer = null) {
-            const movieData = await movieApi[apiName](contentType, additionalContainer);
-            const movieList = movieData.data.results;
+            async function fetchData(apiName, container, additionalContainer = null) {
+                const movieData = await movieApi[apiName](contentType, additionalContainer);
+                const movieList = movieData.data.results;
 
-            document.querySelector(container + ' .swiper-wrapper').innerHTML = '' ;
+                document.querySelector(container + ' .swiper-wrapper').innerHTML = '';
 
-            movieList.forEach(item => {
-              const itemBox = document.createElement('div');
-              itemBox.classList.add('list_card');
-              itemBox.classList.add('swiper-slide');
-              document.querySelector(container + ' .swiper-wrapper').append(itemBox);
+                movieList.forEach(item => {
 
-              const itemInfo = `
-                        <img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>
+                    const itemBox = document.createElement('div');
+                    const itemLink = document.createElement('a')
+
+                    itemBox.classList.add('list_card');
+                    itemBox.classList.add('swiper-slide');
+                    document.querySelector(container + ' .swiper-wrapper').append(itemBox)
+                    itemBox.append(itemLink)
+
+
+                    let itemTitle = ''
+                    let posterImg = `<img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>`
+                    if (contentType === 'movie') {
+                        itemTitle = `
                         <h3>${item.title}</h3>
-                        `;
-              itemBox.innerHTML = itemInfo;
+                        `
+                    } else {
+                        itemTitle = `
+                        <h3>${item.name}</h3>
+                        `
+                    }
+                    itemLink.innerHTML = posterImg + itemTitle;
+                    itemLink.href=`detail/${contentType}/${item.id}`
+                });
+            }
 
-            });
-          }
-          // await fetchData('nowPlaying', '.now_playing');
-          await fetchData('popular', '.popular');
-          await fetchData('today', '.today','day');
-          await fetchData('today', '.week', 'week');
+            await fetchData('popular', '.popular');
+            await fetchData('today', '.today', 'day');
+            await fetchData('today', '.week', 'week');
         } catch (error) {
             console.log(error);
         }
