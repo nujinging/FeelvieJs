@@ -27,8 +27,10 @@
             <div class="item_box">
                 <div class="title"><h2>등장인물</h2></div>
                 <div class="swiper item_slide">
-                    <div class="swiper-wrapper"></div>
+                    <div class="swiper-wrapper credits"></div>
                 </div>
+                <div class="swiper-button-prev swiper-button-disabled swiper-button-lock"></div>
+                <div class="swiper-button-next swiper-button-disabled swiper-button-lock"></div>
             </div>
             <!-- // credits -->
 
@@ -41,8 +43,8 @@
                         <li><button type="button" class="">포스터 24</button></li>
                     </ul>
                 </div>
-                <div class="swiper swiper-initialized swiper-horizontal media_slide swiper-backface-hidden">
-                    <div class="swiper-wrapper" style="transform: translate3d(0px, 0px, 0px);">
+                <div class="swiper media_slide swiper-backface-hidden">
+                    <div class="swiper-wrapper media">
                         <div class="swiper-slide video_card swiper-slide-active"><img src="https://i.ytimg.com/vi/Bldf9SWRPFM/hqdefault.jpg" alt=""></div>
                         <div class="swiper-slide video_card swiper-slide-next"><img src="https://i.ytimg.com/vi/OyD-JZSYjXc/hqdefault.jpg" alt=""></div>
                         <div class="swiper-slide video_card"><img src="https://i.ytimg.com/vi/Ac7j_wLYJ9Y/hqdefault.jpg" alt=""></div>
@@ -50,6 +52,18 @@
                 </div>
             </div>
             <!-- // media -->
+
+            <div class="item_box">
+                <div class="title"><h2>추천 작품</h2></div>
+                <div class="swiper item_slide item_list swiper-backface-hidden">
+                    <div class="swiper-wrapper recommend">
+                        <div class="swiper-slide list_card item_card swiper-slide-active"><a href="/detail/movie/609681 "><img src="https://image.tmdb.org/t/p/w220_and_h330_face/qApkjVJzZ2nkFUcFhcYkTBaRnNj.jpg" alt="더 마블스" loading="lazy"><h3>더 마블스</h3></a></div>
+                    </div>
+                    <div class="swiper-button-prev swiper-button-disabled swiper-button-lock"></div>
+                    <div class="swiper-button-next swiper-button-disabled swiper-button-lock"></div>
+                </div>
+            </div>
+            <!-- // recommend -->
         </div>
     </div>
 
@@ -63,13 +77,16 @@
             const fetchBasic = await movieApi.detail(type, id);
             const fetchSocial = await movieApi.social(type, id);
             const fetchCredits = await movieApi.credits(type, id);
+            const fetchRecommend = await movieApi.recommend(type, id);
             const data = fetchBasic.data;
             const socialData = fetchSocial.data;
             const creditsData = fetchCredits.data.cast;
+            const recommendData = fetchRecommend.data.results;
 
             console.log(data);
             console.log(socialData);
             console.log(creditsData);
+            console.log(recommendData);
 
             const transAdult = age => {
                 return age == false ? "애들은자라" : "므흣";
@@ -148,7 +165,7 @@
                     itemBox.classList.add('swiper-slide');
                     itemBox.classList.add('list_card');
                     itemBox.classList.add('person_card');
-                    document.querySelector('.swiper-wrapper').append(itemBox);
+                    document.querySelector('.swiper-wrapper.credits').append(itemBox);
 
                     const itemInfo = `
                         <a href="/person/${cast.id} ">
@@ -160,6 +177,27 @@
                 });
             }
             insertCredits();
+
+            const insertRecommend = () => {
+                recommendData.forEach((recommend, index) => {
+                    const itemBox = document.createElement('div');
+                    itemBox.classList.add('swiper-slide');
+                    itemBox.classList.add('list_card');
+                    itemBox.classList.add('item_card');
+                    document.querySelector('.swiper-wrapper.recommend').append(itemBox);
+
+                    const itemInfo = `
+                        <div class="swiper-slide list_card item_card swiper-slide-active">
+                            <a href="/detail/movie/${recommend.id} ">
+                                <img src="https://image.tmdb.org/t/p/w220_and_h330_face/${recommend.poster_path}" alt="${recommend.title}" loading="lazy">
+                                <h3>${recommend.title}</h3>
+                            </a>
+                        </div>
+                    `;
+                    itemBox.innerHTML = itemInfo;
+                });
+            }
+            insertRecommend();
         };
         render("movie","609681");
     </script>
