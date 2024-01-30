@@ -135,6 +135,53 @@
 
     FetchData();
 
+    //////////////////////////////////////////////
+
+    // router.js 로 나중에 추출할거임
+    function createRouter() {
+        const routes = [];
+
+        const router = {
+            addRoute(fragment, component) {
+                routes.push({ fragment, component });
+                return this;
+            },
+            start(fragment) {
+                // console.log(fragment);
+                // console.log(routes);
+                // console.log(window.location.pathname);
+            
+            const checkRoutes = () => {
+                const currentRoute = routes.find(route => route.fragment === fragment);
+                console.log(currentRoute);
+                currentRoute.component(); // 여기가 실행
+            };
+
+            window.addEventListener("hashchange", checkRoutes); // 브라우저에서 hash값이 바뀔때 발생하는 이벤트.
+                checkRoutes();
+            },
+        };
+
+        return router;
+    }
+
+    const router = createRouter();
+
+    setTimeout(() => {
+        const listItems = document.querySelectorAll(".list_card a");
+        
+        [].forEach.call(listItems, function(item, index){
+            const path = item.getAttribute('href');
+            router.addRoute(path, () => window.location.href = 'http://127.0.0.1:5500/FeelvieJs-main/pages/detail.html' );
+
+            item.addEventListener('click', function(e){
+                e.preventDefault();
+                window.history.replaceState(null, '', path);
+                router.start(path);
+            });
+        })
+    }, 1000);
+
 
 </script>
 </html>
