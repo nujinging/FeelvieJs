@@ -75,7 +75,7 @@
     function TypeChange(type) {
         contentType = type;
         document.querySelectorAll('.type_list button').forEach(item => {
-            item.classList.remove('activ
+            item.classList.remove('active')
         })
         event.target.classList.add('active');
         FetchData();
