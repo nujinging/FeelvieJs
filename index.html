@@ -19,14 +19,7 @@
 <body>
 
 <div class="item_container">
-    <ul class="type_list">
-        <li>
-            <button type="button" onclick="TypeChange('movie')" class="active">영화</button>
-        </li>
-        <li>
-            <button type="button" onclick="TypeChange('tv')" class="">TV</button>
-        </li>
-    </ul>
+
 
     <!--    <div class="item_box">-->
     <!--        <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>-->
@@ -37,7 +30,17 @@
     <!--    </div>-->
 
     <div class="item_box">
-        <div class="title"><h2>🎬👍가장 인기있는 컨텐츠</h2></div>
+        <div class="title">
+            <h2>🎬👍가장 인기있는 컨텐츠</h2>
+            <ul class="type_list">
+                <li>
+                    <button type="button" onclick="TypeChange('movie')" class="active">영화</button>
+                </li>
+                <li>
+                    <button type="button" onclick="TypeChange('tv')" class="">TV</button>
+                </li>
+            </ul>
+        </div>
         <div class="swiper item_slide popular">
             <div class="swiper-wrapper">
                 <div class="swiper-button-next"></div>
@@ -73,14 +76,60 @@
     let contentId = '';
 
     function TypeChange(type) {
+        const e = event.target;
         contentType = type;
         document.querySelectorAll('.type_list button').forEach(item => {
-            item.classList.remove('active')
+            item.classList.remove('active');
         })
-        event.target.classList.add('active');
-        FetchData();
+        e.classList.add('active');
+
+        const itemList = e.parentNode.parentNode.parentNode.nextElementSibling.children[0];
+
+        console.log(itemList);
+
+        fetchData('popular', '.popular');
+
         localStorage.setItem('type', contentType);
     }
+
+    async function fetchData(apiName, container, additionalContainer = null) {
+        const movieData = await movieApi[apiName](contentType, additionalContainer);
+        const movieList = movieData.data.results;
+
+        console.log(document.querySelector(container + ' .swiper-wrapper'))
+        document.querySelector(container + ' .swiper-wrapper').innerHTML = '';
+
+        movieList.forEach(item => {
+
+            const itemBox = document.createElement('div');
+            const itemLink = document.createElement('a')
+
+            itemBox.classList.add('list_card');
+            itemBox.classList.add('swiper-slide');
+            document.querySelector(container + ' .swiper-wrapper').append(itemBox)
+            itemBox.append(itemLink)
+
+
+            let itemTitle = ''
+            let posterImg = `<img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>`
+            if (contentType === 'movie') {
+                itemTitle = `
+                        <h3>${item.title}</h3>
+                        `
+            } else {
+                itemTitle = `
+                        <h3>${item.name}</h3>
+                        `
+            }
+            itemLink.innerHTML = posterImg + itemTitle;
+            itemLink.href=`detail/${contentType}/${item.id}`
+
+        });
+    }
+
+    // fetchData('popular', '.popular');
+    // fetchData('today', '.today', 'day');
+    // fetchData('today', '.week', 'week');
 
     const swiper = new Swiper(".item_slide", {
         slidesPerView: "auto",
@@ -90,50 +139,6 @@
         },
     });
 
-    async function FetchData() {
-        try {
-            async function fetchData(apiName, container, additionalContainer = null) {
-                const movieData = await movieApi[apiName](contentType, additionalContainer);
-                const movieList = movieData.data.results;
-
-                document.querySelector(container + ' .swiper-wrapper').innerHTML = '';
-
-                movieList.forEach(item => {
-
-                    const itemBox = document.createElement('div');
-                    const itemLink = document.createElement('a')
-
-                    itemBox.classList.add('list_card');
-                    itemBox.classList.add('swiper-slide');
-                    document.querySelector(container + ' .swiper-wrapper').append(itemBox)
-                    itemBox.append(itemLink)
-
-
-                    let itemTitle = ''
-                    let posterImg = `<img src="https://media.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}"/>`
-                    if (contentType === 'movie') {
-                        itemTitle = `
-                        <h3>${item.title}</h3>
-                        `
-                    } else {
-                        itemTitle = `
-                        <h3>${item.name}</h3>
-                        `
-                    }
-                    itemLink.innerHTML = posterImg + itemTitle;
-                    itemLink.href=`detail/${contentType}/${item.id}`
-                });
-            }
-
-            await fetchData('popular', '.popular');
-            await fetchData('today', '.today', 'day');
-            await fetchData('today', '.week', 'week');
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    FetchData();
 
     //////////////////////////////////////////////
 
