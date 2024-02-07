@@ -111,26 +111,21 @@
 
         const mediaList = [
             {container : 'popular', containerClass : '.popular'},
-            {container : 'today', containerClass : '.today', additionalContainer : 'day'},
+            {container : 'today', containerClass : 'today', additionalContainer : 'day'},
             {container : 'today', containerClass : '.week', additionalContainer : 'week'},
         ]
 
+        let container = mediaList[index].container;
+        let containerClass = mediaList[index].containerClass;
+        let additionalContainer = mediaList[index].additionalContainer;
 
-        console.log(mediaList[index].container)
-        tabBox.innerHTML = `<li>
-    <button type="button" onclick="TypeChange('movie', mediaList[index].container, mediaList[index].containerClass, mediaList[index].additionalContainer )">영화</button>
-</li><li>
-<button type="button" onclick="TypeChange('tv', mediaList[index].container, mediaList[index].containerClass, mediaList[index].additionalContainer )">TV</button>
-</li>`
+        console.log(mediaList[index].additionalContainer)
+        tabBox.innerHTML = `<li><button type="button" onclick="TypeChange('movie','${container}','${containerClass}','${additionalContainer}')">영화</button></li>
+<li><button type="button" onclick="TypeChange('tv','${container}','${containerClass}','${additionalContainer}')">TV</button></li>`
 
-
-        console.log(item.nextElementSibling)
-        console.log(mediaList[index].container)
     })
 
-
-
-    function TypeChange(type, container, containerClass, additionalContainer = null) {
+    function TypeChange(type, container, containerClass, additionalContainer = null | undefined) {
         const e = event.target;
         contentType = type;
         document.querySelectorAll('.type_list button').forEach(item => {
