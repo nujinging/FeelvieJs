@@ -20,7 +20,6 @@
 
 <div class="item_container">
 
-
     <!--    <div class="item_box">-->
     <!--        <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>-->
     <!--        <div class="swiper item_slide now_playing">-->
@@ -32,14 +31,6 @@
     <div class="item_box">
         <div class="title">
             <h2>🎬👍가장 인기있는 컨텐츠</h2>
-            <ul class="type_list">
-                <li>
-                    <button type="button" onclick="TypeChange('movie', 'popular', '.popular')" class="active">영화</button>
-                </li>
-                <li>
-                    <button type="button" onclick="TypeChange('tv', 'popular', '.popular')" class="">TV</button>
-                </li>
-            </ul>
         </div>
         <div class="swiper item_slide popular">
             <div class="swiper-wrapper">
@@ -54,14 +45,6 @@
     <div class="item_box">
         <div class="title">
             <h2><span>📅 오늘 가장 많이</span> 찾아 본 컨텐츠</h2>
-            <ul class="type_list">
-                <li>
-                    <button type="button" onclick="TypeChange('movie','today', '.today', 'day')" class="active">영화</button>
-                </li>
-                <li>
-                    <button type="button" onclick="TypeChange('tv', 'today', '.today', 'day')" class="">TV</button>
-                </li>
-            </ul>
         </div>
 
         <div class="swiper item_slide today">
@@ -75,20 +58,11 @@
             <h2>
                 <span>📅 이번주 가장 많이</span> 찾아 본 컨텐츠
             </h2>
-            <ul class="type_list">
-                <li>
-                    <button type="button" onclick="TypeChange('movie','today', '.week', 'week')" class="active">영화</button>
-                </li>
-                <li>
-                    <button type="button" onclick="TypeChange('tv', 'today', '.week', 'week')" class="">TV</button>
-                </li>
-            </ul>
         </div>
         <div class="swiper item_slide week">
             <div class="swiper-wrapper">
             </div>
         </div>
-
     </div>
 
 
@@ -96,7 +70,7 @@
 </body>
 
 <script>
-    let  contentType = 'movie';
+    let contentType = 'movie';
 
     fetchData('popular','.popular');
     fetchData('today', '.today', 'day');
@@ -104,6 +78,7 @@
 
     const titleTab = document.querySelectorAll('.item_box .title');
 
+    // 탭 ul 생성
     titleTab.forEach((item, index) => {
         const tabBox = document.createElement('ul');
         tabBox.classList.add('type_list');
@@ -111,7 +86,7 @@
 
         const mediaList = [
             {container : 'popular', containerClass : '.popular'},
-            {container : 'today', containerClass : 'today', additionalContainer : 'day'},
+            {container : 'today', containerClass : '.today', additionalContainer : 'day'},
             {container : 'today', containerClass : '.week', additionalContainer : 'week'},
         ]
 
@@ -119,12 +94,12 @@
         let containerClass = mediaList[index].containerClass;
         let additionalContainer = mediaList[index].additionalContainer;
 
-        console.log(mediaList[index].additionalContainer)
         tabBox.innerHTML = `<li><button type="button" onclick="TypeChange('movie','${container}','${containerClass}','${additionalContainer}')">영화</button></li>
 <li><button type="button" onclick="TypeChange('tv','${container}','${containerClass}','${additionalContainer}')">TV</button></li>`
 
     })
 
+    // 탭 클릭 시
     function TypeChange(type, container, containerClass, additionalContainer = null | undefined) {
         const e = event.target;
         contentType = type;
@@ -132,16 +107,11 @@
             item.classList.remove('active');
         })
         e.classList.add('active');
-
-        const itemList = e.parentNode.parentNode.parentNode.nextElementSibling.children[0];
-
-        console.log(itemList);
-
         fetchData(container, containerClass, additionalContainer);
 
-        localStorage.setItem('type', contentType);
     }
 
+    // 데이터 불러오기
     async function fetchData(apiName, container, additionalContainer = null) {
         const movieData = await movieApi[apiName](contentType, additionalContainer);
         const movieList = movieData.data.results;
@@ -149,8 +119,8 @@
         // 초기화
         document.querySelector(container + ' .swiper-wrapper').innerHTML = '';
 
+        // 데이터 개수만큼 돌려서 div, a태그 생성 후 데이터 바인딩
         movieList.forEach(item => {
-
             const itemBox = document.createElement('div');
             const itemLink = document.createElement('a')
 
@@ -171,21 +141,19 @@
                         `
             }
             itemLink.innerHTML = posterImg + itemTitle;
-            itemLink.href=`detail.html#${contentType}/${item.id}`
+            itemLink.href=`detail.html?${contentType}/${item.id}`
 
         });
     }
 
-
-    const swiper = new Swiper(".item_slide", {
+    //  리스트 슬라이드 추가
+   new Swiper(".item_slide", {
         slidesPerView: "auto",
         navigation: {
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
         },
     });
-
-
 
 </script>
 </html>
