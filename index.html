@@ -102,6 +102,34 @@
     fetchData('today', '.today', 'day');
     fetchData('today', '.week', 'week');
 
+    const titleTab = document.querySelectorAll('.item_box .title');
+
+    titleTab.forEach((item, index) => {
+        const tabBox = document.createElement('ul');
+        tabBox.classList.add('type_list');
+        item.append(tabBox);
+
+        const mediaList = [
+            {container : 'popular', containerClass : '.popular'},
+            {container : 'today', containerClass : '.today', additionalContainer : 'day'},
+            {container : 'today', containerClass : '.week', additionalContainer : 'week'},
+        ]
+
+
+        console.log(mediaList[index].container)
+        tabBox.innerHTML = `<li>
+    <button type="button" onclick="TypeChange('movie', mediaList[index].container, mediaList[index].containerClass, mediaList[index].additionalContainer )">영화</button>
+</li><li>
+<button type="button" onclick="TypeChange('tv', mediaList[index].container, mediaList[index].containerClass, mediaList[index].additionalContainer )">TV</button>
+</li>`
+
+
+        console.log(item.nextElementSibling)
+        console.log(mediaList[index].container)
+    })
+
+
+
     function TypeChange(type, container, containerClass, additionalContainer = null) {
         const e = event.target;
         contentType = type;
@@ -120,11 +148,10 @@
     }
 
     async function fetchData(apiName, container, additionalContainer = null) {
-
         const movieData = await movieApi[apiName](contentType, additionalContainer);
         const movieList = movieData.data.results;
 
-        console.log(document.querySelector(container + ' .swiper-wrapper'))
+        // 초기화
         document.querySelector(container + ' .swiper-wrapper').innerHTML = '';
 
         movieList.forEach(item => {
