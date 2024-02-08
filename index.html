@@ -71,6 +71,7 @@
 
 <script>
     let contentType = 'movie';
+    let tabEelement = '';
 
     fetchData('popular','.popular');
     fetchData('today', '.today', 'day');
@@ -80,6 +81,7 @@
 
     // 탭 ul 생성
     titleTab.forEach((item, index) => {
+        tabEelement = item;
         const tabBox = document.createElement('ul');
         tabBox.classList.add('type_list');
         item.append(tabBox);
@@ -94,7 +96,7 @@
         let containerClass = mediaList[index].containerClass;
         let additionalContainer = mediaList[index].additionalContainer;
 
-        tabBox.innerHTML = `<li><button type="button" onclick="TypeChange('movie','${container}','${containerClass}','${additionalContainer}')">영화</button></li>
+        tabBox.innerHTML = `<li><button type="button" class="active" onclick="TypeChange('movie','${container}','${containerClass}','${additionalContainer}')">영화</button></li>
 <li><button type="button" onclick="TypeChange('tv','${container}','${containerClass}','${additionalContainer}')">TV</button></li>`
 
     })
@@ -103,12 +105,11 @@
     function TypeChange(type, container, containerClass, additionalContainer = null | undefined) {
         const e = event.target;
         contentType = type;
-        document.querySelectorAll('.type_list button').forEach(item => {
+        e.closest('.type_list').querySelectorAll('button').forEach(item => {
             item.classList.remove('active');
-        })
+        });
         e.classList.add('active');
         fetchData(container, containerClass, additionalContainer);
-
     }
 
     // 데이터 불러오기
@@ -147,7 +148,7 @@
     }
 
     //  리스트 슬라이드 추가
-   new Swiper(".item_slide", {
+    new Swiper(".item_slide", {
         slidesPerView: "auto",
         navigation: {
             nextEl: ".swiper-button-next",
