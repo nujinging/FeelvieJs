@@ -18,6 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="../services/movieApi.js"></script>
+    <script src="../script/common.js"></script>
     <title>Document</title>
   </head>
   <body>
@@ -38,9 +39,9 @@
                 <div class="title">
                     <h2>미디어</h2>
                     <ul class="type_list">
-                        <li><button type="button" class="active">동영상 3</button></li>
-                        <li><button type="button" class="">배경 32</button></li>
-                        <li><button type="button" class="">포스터 24</button></li>
+                        <li><button type="button" data-type="video" class="active">동영상 3</button></li>
+                        <li><button type="button" data-type="background" class="">배경 32</button></li>
+                        <li><button type="button" data-type="poster" class="">포스터 24</button></li>
                     </ul>
                 </div>
                 <div class="swiper media_slide swiper-backface-hidden">
@@ -70,14 +71,6 @@
         const locationQuery = location.href.split("?")[1].split("/");
         const locationType = locationQuery[0];
         const locationId = locationQuery[1];
-
-        const swiper = new Swiper(".item_slide", {
-            slidesPerView: "auto",
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-        });
 
         const render = async (type, id) => {
             const fetchBasic = await movieApi.detail(type, id);
@@ -185,12 +178,23 @@
             insertCredits();
 
             const selectMedia = () => {
-                console.log(document.querySelector('.item_box[data-section="media"] .type-list'));
-
+                // console.log(document.querySelector('.item_box[data-section="media"] .type_list'));
+                const mediaButton = document.querySelector('.type_list');
+                mediaButton.addEventListener('click', function(e){
+                    const _thisButton = e.target;
+                    const _selectType = _thisButton.getAttribute('data-type')
+                    const _otherButtons = siblings(_thisButton.parentElement);
+                    
+                    _otherButtons.forEach(function (button, index) {
+                        button.children[0].classList.remove('active');
+                    })
+                    _thisButton.classList.add('active');
+                })
             }
             selectMedia();
+
             const insertMedia = () => {
-                
+                // 미디어에서 버튼 클릭시 insert할 함수
             }
 
             const insertRecommend = () => {
@@ -218,6 +222,14 @@
             }
             insertRecommend();
         };
+
+        const swiper = new Swiper(".item_slide", {
+            slidesPerView: "auto",
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
         
         render(locationType, locationId);
     </script>
