@@ -24,7 +24,7 @@
     <div id="root">
 
         <div class="item_container detail">
-            <div class="item_box">
+            <div class="item_box" data-section="credits">
                 <div class="title"><h2>등장인물</h2></div>
                 <div class="swiper item_slide">
                     <div class="swiper-wrapper credits"></div>
@@ -34,7 +34,7 @@
             </div>
             <!-- // credits -->
 
-            <div class="item_box">
+            <div class="item_box" data-section="media">
                 <div class="title">
                     <h2>미디어</h2>
                     <ul class="type_list">
@@ -53,12 +53,10 @@
             </div>
             <!-- // media -->
 
-            <div class="item_box">
+            <div class="item_box" data-section="recommend">
                 <div class="title"><h2>추천 작품</h2></div>
                 <div class="swiper item_slide item_list swiper-backface-hidden">
-                    <div class="swiper-wrapper recommend">
-                        <div class="swiper-slide list_card item_card swiper-slide-active"><a href="/detail/movie/609681 "><img src="https://image.tmdb.org/t/p/w220_and_h330_face/qApkjVJzZ2nkFUcFhcYkTBaRnNj.jpg" alt="더 마블스" loading="lazy"><h3>더 마블스</h3></a></div>
-                    </div>
+                    <div class="swiper-wrapper recommend"></div>
                     <div class="swiper-button-prev swiper-button-disabled swiper-button-lock"></div>
                     <div class="swiper-button-next swiper-button-disabled swiper-button-lock"></div>
                 </div>
@@ -69,8 +67,16 @@
 
     <script>
 
+        const locationQuery = location.href.split("?")[1].split("/");
+        const locationType = locationQuery[0];
+        const locationId = locationQuery[1];
+
         const swiper = new Swiper(".item_slide", {
-            slidesPerView: "auto"
+            slidesPerView: "auto",
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
         });
 
         const render = async (type, id) => {
@@ -89,7 +95,7 @@
             console.log(recommendData);
 
             const transAdult = age => {
-                return age == false ? "애들은자라" : "므흣";
+                return age == false ? "전체연령가" : "애들은 자라";
             };
 
             const transRuntime = runtime => {
@@ -178,7 +184,20 @@
             }
             insertCredits();
 
+            const selectMedia = () => {
+                console.log(document.querySelector('.item_box[data-section="media"] .type-list'));
+
+            }
+            selectMedia();
+            const insertMedia = () => {
+                
+            }
+
             const insertRecommend = () => {
+                if(recommendData.length == 0) {
+                    const recommendNone = `<p class="recommend_none">😢 안데스 설원의 생존자들의 충분한 평가가 이뤄지지않아 아직 추천드릴 작품이 없어요<br></p>`;
+                    document.querySelector('.item_box[data-section="recommend"]').insertAdjacentHTML('beforeend', recommendNone);
+                }
                 recommendData.forEach((recommend, index) => {
                     const itemBox = document.createElement('div');
                     itemBox.classList.add('swiper-slide');
@@ -199,7 +218,8 @@
             }
             insertRecommend();
         };
-        render("movie","609681");
+        
+        render(locationType, locationId);
     </script>
   </body>
 </html>
