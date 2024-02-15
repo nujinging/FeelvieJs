@@ -20,13 +20,13 @@
 
 <div class="item_container">
 
-    <!--    <div class="item_box">-->
-    <!--        <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>-->
-    <!--        <div class="swiper item_slide now_playing">-->
-    <!--            <div class="swiper-wrapper">-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
+        <div class="item_box">
+            <div class="title"><h2>🎬 지금 상영중이에요!</h2></div>
+            <div class="swiper item_slide now_playing">
+                <div class="swiper-wrapper">
+                </div>
+            </div>
+        </div>
 
     <div class="item_box">
         <div class="title">
@@ -71,8 +71,8 @@
 
 <script>
     let contentType = 'movie';
-    let tabEelement = '';
 
+    fetchData('nowPlaying','.now_playing');
     fetchData('popular','.popular');
     fetchData('today', '.today', 'day');
     fetchData('today', '.week', 'week');
@@ -81,12 +81,12 @@
 
     // 탭 ul 생성
     titleTab.forEach((item, index) => {
-        tabEelement = item;
         const tabBox = document.createElement('ul');
         tabBox.classList.add('type_list');
         item.append(tabBox);
 
         const mediaList = [
+            {container : 'nowPlaying', containerClass : '.now_playing'},
             {container : 'popular', containerClass : '.popular'},
             {container : 'today', containerClass : '.today', additionalContainer : 'day'},
             {container : 'today', containerClass : '.week', additionalContainer : 'week'},
@@ -96,9 +96,10 @@
         let containerClass = mediaList[index].containerClass;
         let additionalContainer = mediaList[index].additionalContainer;
 
-        tabBox.innerHTML = `<li><button type="button" class="active" onclick="TypeChange('movie','${container}','${containerClass}','${additionalContainer}')">영화</button></li>
+        if (item.parentElement.children[1].classList.contains('now_playing') === false) {
+            tabBox.innerHTML = `<li><button type="button" class="active" onclick="TypeChange('movie','${container}','${containerClass}','${additionalContainer}')">영화</button></li>
 <li><button type="button" onclick="TypeChange('tv','${container}','${containerClass}','${additionalContainer}')">TV</button></li>`
-
+        }
     })
 
     // 탭 클릭 시
