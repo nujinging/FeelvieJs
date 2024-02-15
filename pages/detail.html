@@ -29,27 +29,19 @@
                 <div class="title"><h2>등장인물</h2></div>
                 <div class="swiper item_slide">
                     <div class="swiper-wrapper credits"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
                 </div>
-                <div class="swiper-button-prev swiper-button-disabled swiper-button-lock"></div>
-                <div class="swiper-button-next swiper-button-disabled swiper-button-lock"></div>
             </div>
             <!-- // credits -->
 
             <div class="item_box" data-section="media">
                 <div class="title">
                     <h2>미디어</h2>
-                    <ul class="type_list">
-                        <li><button type="button" data-type="video" class="active">동영상 3</button></li>
-                        <li><button type="button" data-type="background" class="">배경 32</button></li>
-                        <li><button type="button" data-type="poster" class="">포스터 24</button></li>
-                    </ul>
+                    <ul class="type_list"></ul>
                 </div>
                 <div class="swiper media_slide swiper-backface-hidden">
-                    <div class="swiper-wrapper media">
-                        <div class="swiper-slide video_card swiper-slide-active"><img src="https://i.ytimg.com/vi/Bldf9SWRPFM/hqdefault.jpg" alt=""></div>
-                        <div class="swiper-slide video_card swiper-slide-next"><img src="https://i.ytimg.com/vi/OyD-JZSYjXc/hqdefault.jpg" alt=""></div>
-                        <div class="swiper-slide video_card"><img src="https://i.ytimg.com/vi/Ac7j_wLYJ9Y/hqdefault.jpg" alt=""></div>
-                    </div>
+                    <div class="swiper-wrapper media"></div>
                 </div>
             </div>
             <!-- // media -->
@@ -58,8 +50,8 @@
                 <div class="title"><h2>추천 작품</h2></div>
                 <div class="swiper item_slide item_list swiper-backface-hidden">
                     <div class="swiper-wrapper recommend"></div>
-                    <div class="swiper-button-prev swiper-button-disabled swiper-button-lock"></div>
-                    <div class="swiper-button-next swiper-button-disabled swiper-button-lock"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
                 </div>
             </div>
             <!-- // recommend -->
@@ -77,15 +69,21 @@
             const fetchSocial = await movieApi.social(type, id);
             const fetchCredits = await movieApi.credits(type, id);
             const fetchRecommend = await movieApi.recommend(type, id);
+            const fetchMediaImg = await movieApi.mediaImg(type, id);
+            const fetchMediaVid = await movieApi.mediaVid(type, id);
             const data = fetchBasic.data;
             const socialData = fetchSocial.data;
             const creditsData = fetchCredits.data.cast;
             const recommendData = fetchRecommend.data.results;
+            const mediaImgData = fetchMediaImg.data;
+            const mediaVidData = fetchMediaVid.data.results;
 
             console.log(data);
             console.log(socialData);
             console.log(creditsData);
             console.log(recommendData);
+            console.log(mediaImgData);
+            console.log(mediaVidData);
 
             const transAdult = age => {
                 return age == false ? "전체연령가" : "애들은 자라";
@@ -177,24 +175,68 @@
             }
             insertCredits();
 
+            const showMediaButton = (len1, len2, len3) => {
+                const btn1 = `<li><button type="button" data-type="videos" class="active">동영상 ${len1}</button></li>`;
+                const btn2 = `<li><button type="button" data-type="backdops" class="">배경 ${len2}</button></li>`;
+                const btn3 = `<li><button type="button" data-type="posters" class="">포스터 ${len3}</button></li>`;
+                len1 > 0 ? document.querySelector(".type_list").insertAdjacentHTML("afterbegin", btn1) 
+                    : len2 > 0 ? document.querySelector(".type_list").insertAdjacentHTML("afterbegin", btn2) 
+                    : len3 > 0 ? document.querySelector(".type_list").insertAdjacentHTML("afterbegin", btn3) : null;
+            }
+            showMediaButton(mediaVidData.length, mediaImgData.backdrops.length, mediaImgData.posters.length);
+
             const selectMedia = () => {
                 // console.log(document.querySelector('.item_box[data-section="media"] .type_list'));
                 const mediaButton = document.querySelector('.type_list');
                 mediaButton.addEventListener('click', function(e){
                     const _thisButton = e.target;
-                    const _selectType = _thisButton.getAttribute('data-type')
+                    const mediaType = _thisButton.getAttribute('data-type');
                     const _otherButtons = siblings(_thisButton.parentElement);
                     
                     _otherButtons.forEach(function (button, index) {
                         button.children[0].classList.remove('active');
                     })
                     _thisButton.classList.add('active');
+                    insertMedia(mediaType);
                 })
             }
             selectMedia();
 
-            const insertMedia = () => {
+            const insertMedia = (type) => {
                 // 미디어에서 버튼 클릭시 insert할 함수
+                console.log(type);
+                switch (type) {
+                    case "videos":
+                        console.log('video');
+                        createMediaData(mediaVidData);
+                        break;
+                    case "backdrops":
+                        console.log('backdrops');
+                        createMediaData(mediaImgData.backdrops);
+                        break;
+                    case "posters":
+                        console.log('posters');
+                        createMediaData(mediaImgData.posters);
+                        break;
+                
+                    default:
+                        break;
+                }
+
+                function createMediaData(mediaType) {
+                    mediaType.forEach((item, index) => {
+                        const itemBox = document.createElement('div');
+                        itemBox.classList.add('swiper-slide');
+                        itemBox.classList.add('video_card');
+                        document.querySelector('.swiper-wrapper.media').append(itemBox);
+
+                        const itemInfo = `
+                            <img src="https://i.ytimg.com/vi/${item.key}/hqdefault.jpg" alt="">
+                        `;
+                        itemBox.innerHTML = itemInfo;
+                    });
+                }
+                const aa = `https://i.ytimg.com/vi/Bx59zdQ-00M/hqdefault.jpg`;
             }
 
             const insertRecommend = () => {
@@ -210,12 +252,10 @@
                     document.querySelector('.swiper-wrapper.recommend').append(itemBox);
 
                     const itemInfo = `
-                        <div class="swiper-slide list_card item_card swiper-slide-active">
-                            <a href="/detail/movie/${recommend.id} ">
-                                <img src="https://image.tmdb.org/t/p/w220_and_h330_face/${recommend.poster_path}" alt="${recommend.title}" loading="lazy">
-                                <h3>${recommend.title}</h3>
-                            </a>
-                        </div>
+                        <a href="/detail/movie/${recommend.id} ">
+                            <img src="https://image.tmdb.org/t/p/w220_and_h330_face/${recommend.poster_path}" alt="${recommend.title}" loading="lazy">
+                            <h3>${recommend.title}</h3>
+                        </a>
                     `;
                     itemBox.innerHTML = itemInfo;
                 });
@@ -229,6 +269,10 @@
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
+        });
+
+        const mediaSwiper = new Swiper(".media_slide", {
+            slidesPerView: "4",
         });
         
         render(locationType, locationId);
