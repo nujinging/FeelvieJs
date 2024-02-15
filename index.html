@@ -14,12 +14,15 @@
     <link rel="stylesheet" href="./css/common.css"/>
     <link rel="stylesheet" href="./css/list.css"/>
     <script src="./services/movieApi.js"></script>
-    <title>Document</title>
+    <title>FeelvieJs</title>
 </head>
 <body>
+<!-- 헤더 -->
+<div data-include-file="header.html" class="include_js"></div>
 
 <div class="container">
 
+    <!-- 홈배너 -->
     <div class="swiper home_banner">
         <div class="swiper-wrapper">
         </div>
@@ -82,6 +85,30 @@
 </body>
 
 <script>
+    function includeHtml() {
+        const includeTarget = document.querySelectorAll('.include_js');
+        includeTarget.forEach(function(el, idx) {
+            const targetFile = el.dataset.includeFile;
+            if(targetFile){
+                let xhttp = new XMLHttpRequest();
+
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState === XMLHttpRequest.DONE) {
+                        this.status === 200 ? (el.innerHTML = this.responseText) : null
+                        this.status === 404 ? (el.innerHTML = 'include not found.') : null
+                    }
+                }
+                xhttp.open('GET', targetFile, true);
+                xhttp.send();
+                return;
+            }
+        });
+    };
+
+    includeHtml();
+
+
+    // 데이터
     let contentType = 'movie';
 
     fetchData('nowPlaying','.now_playing');
@@ -160,6 +187,15 @@
         });
     }
 
+    //  리스트 슬라이드
+    new Swiper(".item_slide", {
+        slidesPerView: "auto",
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
+
     // 홈배너용
     async function bannerFatch() {
         const bannerApi = await movieApi.popular('movie');
@@ -191,18 +227,13 @@
 
     bannerFatch()
 
-    //  리스트 슬라이드 추가
-    new Swiper(".item_slide", {
-        slidesPerView: "auto",
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-    });
-
-    //  리스트 슬라이드 추가
+    //  홈배너 슬라이드
     new Swiper(".home_banner", {
         slidesPerView: "auto",
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
         pagination: {
             el: ".swiper-pagination",
         },
@@ -211,6 +242,5 @@
             prevEl: ".swiper-button-prev",
         },
     });
-
 </script>
 </html>
