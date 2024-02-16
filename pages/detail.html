@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../css/common.css"/>
     <link rel="stylesheet" href="../css/list.css"/>
     <link rel="stylesheet" href="../css/detail.css" />
+    <link rel="stylesheet" href="../css/mediaSlide.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -40,7 +41,7 @@
                     <h2>미디어</h2>
                     <ul class="type_list"></ul>
                 </div>
-                <div class="swiper media_slide swiper-backface-hidden">
+                <div class="swiper swiper-horizontal media_slide">
                     <div class="swiper-wrapper media"></div>
                 </div>
             </div>
@@ -177,11 +178,16 @@
 
             const showMediaButton = (len1, len2, len3) => {
                 const btn1 = `<li><button type="button" data-type="videos" class="active">동영상 ${len1}</button></li>`;
-                const btn2 = `<li><button type="button" data-type="backdops" class="">배경 ${len2}</button></li>`;
+                const btn2 = `<li><button type="button" data-type="backdrops" class="">배경 ${len2}</button></li>`;
                 const btn3 = `<li><button type="button" data-type="posters" class="">포스터 ${len3}</button></li>`;
-                len1 > 0 ? document.querySelector(".type_list").insertAdjacentHTML("afterbegin", btn1) 
-                    : len2 > 0 ? document.querySelector(".type_list").insertAdjacentHTML("afterbegin", btn2) 
-                    : len3 > 0 ? document.querySelector(".type_list").insertAdjacentHTML("afterbegin", btn3) : null;
+                if(len1 > 0) document.querySelector(".type_list").insertAdjacentHTML("beforeend", btn1);
+                if(len2 > 0) document.querySelector(".type_list").insertAdjacentHTML("beforeend", btn2); 
+                if(len3 > 0) document.querySelector(".type_list").insertAdjacentHTML("beforeend", btn3); 
+                if(len1 == "0" && len2 == "0" && len3 == "0") document.querySelector('.item_box[data-section="media"]').remove();
+
+                setTimeout(() => {
+                    document.querySelectorAll(".type_list button")[0].click();
+                }, 0);
             }
             showMediaButton(mediaVidData.length, mediaImgData.backdrops.length, mediaImgData.posters.length);
 
@@ -205,38 +211,51 @@
             const insertMedia = (type) => {
                 // 미디어에서 버튼 클릭시 insert할 함수
                 console.log(type);
+                mediaSwiper.removeAllSlides();
+
                 switch (type) {
                     case "videos":
-                        console.log('video');
-                        createMediaData(mediaVidData);
+                        createVidData(mediaVidData);
                         break;
                     case "backdrops":
-                        console.log('backdrops');
-                        createMediaData(mediaImgData.backdrops);
+                        createImgData(mediaImgData.backdrops, type);
                         break;
                     case "posters":
-                        console.log('posters');
-                        createMediaData(mediaImgData.posters);
+                        createImgData(mediaImgData.posters, type);
                         break;
                 
                     default:
                         break;
                 }
 
-                function createMediaData(mediaType) {
-                    mediaType.forEach((item, index) => {
+                function createVidData(data) {
+                    data.forEach((item, index) => {
                         const itemBox = document.createElement('div');
                         itemBox.classList.add('swiper-slide');
                         itemBox.classList.add('video_card');
                         document.querySelector('.swiper-wrapper.media').append(itemBox);
-
                         const itemInfo = `
                             <img src="https://i.ytimg.com/vi/${item.key}/hqdefault.jpg" alt="">
                         `;
                         itemBox.innerHTML = itemInfo;
                     });
                 }
-                const aa = `https://i.ytimg.com/vi/Bx59zdQ-00M/hqdefault.jpg`;
+
+                function createImgData(data, type) {
+                    data.forEach((item, index) => {
+                        const itemBox = document.createElement('div');
+                        itemBox.classList.add('swiper-slide');
+                        type == "backdrops" ? itemBox.classList.add('bg_card') : itemBox.classList.add('poster_card');
+                        document.querySelector('.swiper-wrapper.media').append(itemBox);
+                        const itemInfo = `
+                            <button type="button" class="media_link"><img src="https://image.tmdb.org/t/p/w342/${item.file_path}" alt="Movie Poster" loading="lazy"></button>
+                        `;
+                        itemBox.innerHTML = itemInfo;
+                    });
+                }
+
+                console.log(mediaSwiper);
+                // mediaSwiper.update();
             }
 
             const insertRecommend = () => {
@@ -272,7 +291,7 @@
         });
 
         const mediaSwiper = new Swiper(".media_slide", {
-            slidesPerView: "4",
+            slidesPerView: "auto",
         });
         
         render(locationType, locationId);
