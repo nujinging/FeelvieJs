@@ -1,0 +1,75 @@
+.media_slide {
+	 margin: 3.125rem 0 0;
+	 padding-left: 3.75rem;
+	 animation: showItem 0.5s ease-in;
+}
+ .media_slide .swiper-slide:before {
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 opacity: 0;
+	 width: 100%;
+	 height: 100%;
+	 background: rgba(0, 0, 0, 0.6);
+	 transition: all 0.3s ease-in-out;
+	 content: '';
+}
+ .media_slide .swiper-slide:after {
+	 position: absolute;
+	 top: 50%;
+	 left: 50%;
+	 width: 50px;
+	 height: 50px;
+	 opacity: 0;
+	 transition: all 0.3s ease-in-out;
+	 border-radius: 50%;
+	 transform: translate(-50%, -50%);
+	 z-index: 1;
+	 content: '';
+}
+ .media_slide .swiper-slide:hover {
+	 cursor: pointer;
+}
+ .media_slide .swiper-slide:hover:before {
+	 opacity: 1;
+}
+ .media_slide .swiper-slide:hover:after {
+	 opacity: 1;
+}
+ .media_slide .swiper-slide img {
+	 width: 100%;
+	 border-radius: 0.5rem;
+}
+ .media_slide .swiper-slide + .swiper-slide {
+	 margin-left: 1.875rem;
+}
+ .media_slide .video_card {
+	 display: block;
+	 width: 21.25rem;
+}
+ .media_slide .video_card:after {
+	 background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath opacity='0.15' d='M8 6V18L18 12L8 6Z' fill='%23001A72'/%3E%3Cpath d='M8 6V18L18 12L8 6Z' stroke='%23001A72' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+}
+ .media_slide .bg_card {
+	 width: 21.25rem;
+}
+ .media_slide .bg_card:after {
+	 background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 7V17M7 12H17' stroke='%23001A72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+}
+ .media_slide .poster_card {
+	 width: 12.25rem;
+}
+ .media_slide .poster_card:after {
+	 background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 7V17M7 12H17' stroke='%23001A72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center no-repeat;
+}
+ .media_slide .media_link {
+	 padding: 0;
+	 border: none;
+	 background: none;
+}
+ @media screen and (max-width: 768px) {
+	 .media_slide {
+		 padding-left: 2.5rem;
+	}
+}
+ 
