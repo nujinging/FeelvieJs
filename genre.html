@@ -28,11 +28,6 @@
 <div class="item_container">
     <div class="genre_box">
         <ul class="genre_list">
-            <li class="genre_card">
-                <a href="" class="link">
-
-                </a>
-            </li>
         </ul>
     </div>
 </div>
@@ -44,21 +39,38 @@
         slidesPerView: "auto",
     });
 
+    let genreTitleNumber = '';
     async function GenreTitle() {
         const genreTitleData = await movieApi.genreTitle('movie');
-
         genreTitleData.data.genres.forEach(item => {
             let gerneTitleBox = document.querySelector('.genre_keyword .swiper-wrapper');
             const genreTitleItem = document.createElement('div');
+            genreTitleItem.classList.add('swiper-slide');
             genreTitleItem.classList.add('genre_item');
             gerneTitleBox.append(genreTitleItem);
             genreTitleItem.innerHTML = item.name;
+
+            genreTitleItem.addEventListener('click', function() {
+                genreTitleNumber = item.id;
+                GenreList();
+            })
+        })
+    }
+    GenreTitle();
+
+    async function GenreList() {
+        let genreListData = await movieApi.genreList('movie', genreTitleNumber);
+        console.log(genreListData.data.results)
+        genreListData.data.results.forEach(item => {
+            const genreListBox = document.querySelector('.genre_list');
+            const gerneList = genreListBox.createElement('li')
+            console.log(genreListBox)
+            genreListBox.append(gerneList);
         })
     }
 
-    GenreTitle();
 
-
+    GenreList();
 
 </script>
 
