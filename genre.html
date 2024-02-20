@@ -14,10 +14,11 @@
     <link rel="stylesheet" href="./css/common.css"/>
     <link rel="stylesheet" href="./css/genre.css"/>
     <script src="./services/movieApi.js"></script>
+
     <title>Genre</title>
 </head>
 <body>
-
+<div data-include-file="header.html" class="include_js"></div>
 <div class="genre_top">
     <div class="swiper genre_keyword">
         <div class="swiper-wrapper">
@@ -32,14 +33,15 @@
     </div>
 </div>
 
+<script src="./util/common.js"></script>
 <script>
-
     //  리스트 슬라이드
     new Swiper(".genre_keyword", {
         slidesPerView: "auto",
     });
 
     let genreTitleNumber = '';
+    const genreListBox = document.querySelector('.genre_list');
     async function GenreTitle() {
         const genreTitleData = await movieApi.genreTitle('movie');
         genreTitleData.data.genres.forEach(item => {
@@ -52,24 +54,29 @@
 
             genreTitleItem.addEventListener('click', function() {
                 genreTitleNumber = item.id;
+                genreListBox.innerHTML = '';
                 GenreList();
             })
         })
     }
     GenreTitle();
-
     async function GenreList() {
         let genreListData = await movieApi.genreList('movie', genreTitleNumber);
-        console.log(genreListData.data.results)
         genreListData.data.results.forEach(item => {
-            const genreListBox = document.querySelector('.genre_list');
-            const gerneList = genreListBox.createElement('li')
-            console.log(genreListBox)
-            genreListBox.append(gerneList);
+            const genreItem = document.createElement('li');
+            genreItem.classList.add('genre_card')
+            genreListBox.append(genreItem);
+            const genreInfo = `
+                 <a class="link">
+                        <picture>
+                            <img src='https://image.tmdb.org/t/p/w220_and_h330_face${item.poster_path}' alt="" />
+                        </picture>
+                        <p class="tit">${item.title}</p>
+                    </a>
+            `
+            genreItem.innerHTML = genreInfo;
         })
     }
-
-
     GenreList();
 
 </script>

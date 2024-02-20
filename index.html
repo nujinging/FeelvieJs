@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="./css/common.css"/>
     <link rel="stylesheet" href="./css/list.css"/>
     <script src="./services/movieApi.js"></script>
+
     <title>FeelvieJs</title>
 </head>
 <body>
@@ -83,31 +84,8 @@
 
 
 </body>
-
+<script src="./util/common.js"></script>
 <script>
-    function includeHtml() {
-        const includeTarget = document.querySelectorAll('.include_js');
-        includeTarget.forEach(function(el, idx) {
-            const targetFile = el.dataset.includeFile;
-            if(targetFile){
-                let xhttp = new XMLHttpRequest();
-
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState === XMLHttpRequest.DONE) {
-                        this.status === 200 ? (el.innerHTML = this.responseText) : null
-                        this.status === 404 ? (el.innerHTML = 'include not found.') : null
-                    }
-                }
-                xhttp.open('GET', targetFile, true);
-                xhttp.send();
-                return;
-            }
-        });
-    };
-
-    includeHtml();
-
-
     // 데이터
     let contentType = 'movie';
 
