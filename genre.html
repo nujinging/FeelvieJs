@@ -60,6 +60,9 @@
         })
     }
     GenreTitle();
+
+
+
     async function GenreList() {
         let genreListData = await movieApi.genreList('movie', genreTitleNumber);
         genreListData.data.results.forEach(item => {
@@ -76,8 +79,33 @@
             `
             genreItem.innerHTML = genreInfo;
         })
+
+        // 더보기 버튼
+        const itemMoreBtn = document.createElement('li');
+        itemMoreBtn.classList.add('more_card');
+        itemMoreBtn.innerHTML = `<button type="button" class="list_more">더보기</button>`
+        genreListBox.append(itemMoreBtn);
+
+        document.querySelector('.list_more').addEventListener('click', function() {
+            const page = 1;
+            const nextPage = page + 1;
+            const PageData = async () => {
+                try {
+                    const genreUrlScroll = await movieApi.genreScroll('movie', genreTitleNumber, nextPage);
+                    genreListData =  [...genreListData.data.results, ...genreUrlScroll.data.results];
+                    console.log(genreListData)
+                } finally {
+                }
+            };
+            PageData();
+        })
+
     }
+
+
     GenreList();
+
+
 
 </script>
 

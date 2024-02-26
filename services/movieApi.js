@@ -7,16 +7,14 @@ const request = axios.create({
 });
 
 const movieApi = {
-  nowPlaying: type => request.get(`${type}/now_playing`),
-  popular: type => request.get(`${type}/popular`),
+  nowPlaying: (type) => request.get(`${type}/now_playing`),
+  popular: (type) => request.get(`${type}/popular`),
   today: (type, time_window) => request.get(`trending/${type}/${time_window}`),
   detail: (type, id) => request.get(`${type}/${id}`),
   social: (type, id) => request.get(`${type}/${id}/external_ids`),
-  credits: (type, id) => request.get(`${type}/${id}/credits`),
-  recommend: (type, id) => request.get(`${type}/${id}/recommendations`),
-  mediaImg: (type, id) =>
-    request.get(`${type}/${id}/images?&language=fr&include_image_language=fr,null,kr`),
-  mediaVid: (type, id) =>
-    request.get(`${type}/${id}/videos?&language=fr&include_image_language=fr,null,kr`),
+
+  genreTitle : (type) => request.get(`genre/${type}/list`),
+  genreList : (type, genre_number) => request.get(`discover/${type}?with_genres=${genre_number}&sort_by=popularity.desc`),
+  genreScroll: (type, genre_number, page) => request.get(`discover/${type}?with_genres=${genre_number}&page=${page}`),
 };
 
